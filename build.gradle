@@ -1,0 +1,70 @@
+plugins {
+    id 'java'
+}
+
+group 'com.softwareverde'
+version '0.0.1'
+
+sourceCompatibility = 1.8
+
+repositories {
+    mavenCentral()
+    maven { url 'https://jitpack.io' }
+}
+
+dependencies {
+    // implementation  fileTree(dir: 'libs', include: ['*.jar'])
+
+    implementation  group: 'com.github.softwareverde',  name: 'java-util',              version: 'v2.1.3'
+    implementation  group: 'com.github.softwareverde',  name: 'java-logging',           version: 'v2.2.0'
+    implementation  group: 'com.github.softwareverde',  name: 'json',                   version: 'v2.0.0'
+    implementation  group: 'com.github.softwareverde',  name: 'http-servlet',           version: 'v3.2.0'
+    implementation  group: 'com.github.softwareverde',  name: 'java-http-client',       version: 'v2.0.5'
+    implementation  group: 'com.github.softwareverde',  name: 'java-cryptography',      version: 'v3.0.0'
+    implementation  group: 'com.github.softwareverde',  name: 'bitcoin-verde',          version: '0f82af97'
+    implementation  group: 'com.github.softwareverde',  name: 'java-db-mysql',          version: 'v4.0.8'
+    implementation  group: 'com.github.softwareverde',  name: 'java-db-mysql-embedded', version: 'v2.1.6'
+    implementation  group: 'com.sun.mail',              name: 'javax.mail',             version: '1.6.2'
+
+    runtimeOnly group: 'org.apache.logging.log4j',   name: 'log4j-slf4j-impl',       version: '2.13.3'
+
+    testImplementation 'junit:junit:4.12'
+}
+
+sourceSets {
+    main {
+        java
+        resources
+    }
+    test {
+        java
+        resources
+
+        compileClasspath += sourceSets.main.output
+        runtimeClasspath += sourceSets.main.output
+    }
+}
+
+task copyDependencies(type: Copy) {
+    from (configurations.compileClasspath + configurations.runtimeClasspath)
+        into "$buildDir/libs/libs"
+
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+}
+
+task makeJar(type: Jar) {
+    manifest {
+        attributes  'Implementation-Title': 'Bitcoin Cash Gift Cards',
+                    'Implementation-Version': archiveVersion,
+                    'Main-Class': 'com.softwareverde.bch.giftcards.Main',
+                    'Class-Path': (project.configurations.compileClasspath + configurations.runtimeClasspath).collect { 'libs/' + it.getName() }.join(' ')
+    }
+
+    archiveBaseName = project.name
+
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+
+    from sourceSets.main.output
+
+    with jar
+}
