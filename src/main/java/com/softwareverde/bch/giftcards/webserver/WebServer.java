@@ -3,6 +3,7 @@ package com.softwareverde.bch.giftcards.webserver;
 import com.softwareverde.bch.giftcards.configuration.BitcoinProperties;
 import com.softwareverde.bch.giftcards.configuration.ServerProperties;
 import com.softwareverde.bch.giftcards.webserver.api.endpoint.AnnouncementsApi;
+import com.softwareverde.bch.giftcards.webserver.api.endpoint.ExchangeRateApi;
 import com.softwareverde.bch.giftcards.webserver.api.endpoint.RedeemApi;
 import com.softwareverde.bitcoin.transaction.Transaction;
 import com.softwareverde.concurrent.pool.ThreadPool;
@@ -99,6 +100,11 @@ public class WebServer {
 
         { // Api v1
             final String v1ApiPrePath = (apiRootPath + "/v1");
+
+            { // GET: /v1/exchange-rate
+                final ExchangeRateApi exchangeRateApi = new ExchangeRateApi(v1ApiPrePath, environment);
+                _assignEndpoint((v1ApiPrePath + "/exchange-rate"), exchangeRateApi);
+            }
 
             { // POST: /v1/redeem
                 final RedeemApi redeemApi = new RedeemApi(v1ApiPrePath, environment);

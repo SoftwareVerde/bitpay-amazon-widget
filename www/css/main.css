@@ -1,0 +1,32 @@
+html, body {
+    width: 100%;
+    background-color: #FFF;
+}
+
+div.content {
+    margin: 1em 5% 1em 5%;
+}
+
+div#gift-card-amounts {
+    margin: 1em;
+}
+
+div#gift-card-amounts label {
+    display: inline-block;
+    min-width: 15%;
+    white-space: nowrap;
+    padding: 5px;
+}
+
+#custom-amount-entry label {
+    display: block;
+    margin-bottom: 2px;
+}
+
+button {
+    margin: 1em 0;
+    min-width: 25%;
+    padding: 0.25em;
+    font-size: 125%;
+}
+
