@@ -1,2 +1,5 @@
 rm -rf out/www/*
-cp -R www/* out/www
+cd www/
+ng build
+cd -
+cp -R www/dist/bch-gift-cards/* out/www

@@ -1,3 +1,6 @@
+/* You can add global styles to this file, and also import other style files */
+
+/* from core.css */
 html {
     background-color: #EEEEEE;
 }
@@ -206,3 +209,21 @@ a {
         font-size: 95%;
     }
 }
+
+/* from main.css */
+html, body {
+    width: 100%;
+    background-color: #FFF;
+}
+
+div.content {
+    margin: 1em 5% 1em 5%;
+}
+
+button {
+    margin: 1em 0;
+    min-width: 25%;
+    padding: 0.25em;
+    font-size: 125%;
+}
+
