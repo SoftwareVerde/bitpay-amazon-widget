@@ -127,6 +127,7 @@ public class WebServer {
 
     public void start() {
         _httpServer.start();
+        System.out.println("[Listening on Port " + _environment.getServerProperties().getPort() + "]");
     }
 
     public void stop() {

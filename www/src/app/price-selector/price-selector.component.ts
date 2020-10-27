@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Output, EventEmitter } from '@angular/core';
 
 @Component({
   selector: 'app-price-selector',
@@ -6,6 +7,7 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./price-selector.component.css']
 })
 export class PriceSelectorComponent implements OnInit {
+  @Output() priceSelectedEvent = new EventEmitter<Number>();
 
   constructor() { }
 
@@ -13,3 +15,4 @@ export class PriceSelectorComponent implements OnInit {
   }
 
 }
+

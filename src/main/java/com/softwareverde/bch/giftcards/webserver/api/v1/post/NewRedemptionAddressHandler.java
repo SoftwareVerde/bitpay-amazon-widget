@@ -1,29 +1,29 @@
 package com.softwareverde.bch.giftcards.webserver.api.v1.post;
 
-import com.softwareverde.bch.giftcards.GiftCardService;
 import com.softwareverde.bch.giftcards.database.DatabaseManager;
-import com.softwareverde.bch.giftcards.nodeapi.NodeConnection;
 import com.softwareverde.bch.giftcards.webserver.Environment;
 import com.softwareverde.bch.giftcards.webserver.NewAddressCreatedCallback;
 import com.softwareverde.bch.giftcards.webserver.api.endpoint.RedeemApi;
 import com.softwareverde.bitcoin.address.Address;
 import com.softwareverde.bitcoin.address.AddressInflater;
 import com.softwareverde.bitcoin.inflater.MasterInflater;
-import com.softwareverde.bitcoin.slp.SlpTokenId;
 import com.softwareverde.bitcoin.wallet.Wallet;
-import com.softwareverde.constable.list.List;
 import com.softwareverde.cryptography.secp256k1.key.PrivateKey;
-import com.softwareverde.http.querystring.PostParameters;
 import com.softwareverde.http.server.servlet.request.Request;
 import com.softwareverde.http.server.servlet.response.JsonResponse;
 import com.softwareverde.http.server.servlet.response.Response;
 import com.softwareverde.http.server.servlet.routed.RequestHandler;
+import com.softwareverde.http.server.servlet.routed.json.JsonRequestHandler;
 import com.softwareverde.json.Json;
 import com.softwareverde.util.Util;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 
 public class NewRedemptionAddressHandler implements RequestHandler<Environment> {
+    private static final String GIFT_CARD_AMOUNT_FIELD_NAME = "giftCardAmount";
+
     protected final NewAddressCreatedCallback _newAddressCreatedCallback;
 
     public NewRedemptionAddressHandler(final NewAddressCreatedCallback newAddressCreatedCallback) {
@@ -37,21 +37,30 @@ public class NewRedemptionAddressHandler implements RequestHandler<Environment> 
 
         final Json formData = new Json(false);
         {
-            final List<String> requiredFields = null; //redemptionItem.getRequiredFields();
-            final PostParameters postParameters = request.getPostParameters();
+            final Json requestData = JsonRequestHandler.getRequestDataAsJson(request);
+
+            final String giftCardAmountString = requestData.getString(GIFT_CARD_AMOUNT_FIELD_NAME);
+            if (Util.isBlank(giftCardAmountString)) {
+                return _validationError("Missing Field: " + GIFT_CARD_AMOUNT_FIELD_NAME);
+            }
+            final double giftCardAmount = Util.parseDouble(giftCardAmountString, -1D);
+            if (giftCardAmount <= 0) {
+                return _validationError("Invalid gift card amount: " + giftCardAmountString);
+            }
+
+            formData.put(GIFT_CARD_AMOUNT_FIELD_NAME, giftCardAmount);
+
+            final List<String> requiredFields = _getRequiredFields();
             for (final String fieldName : requiredFields) {
-                final String fieldValue = postParameters.get(fieldName);
+                final String fieldValue = requestData.getString(fieldName);
                 if (Util.isBlank(fieldValue)) {
-                    final RedeemApi.NewRedemptionAddressResult newRedemptionAddressResult = new RedeemApi.NewRedemptionAddressResult();
-                    newRedemptionAddressResult.setWasSuccess(false);
-                    newRedemptionAddressResult.setErrorMessage("Missing Field: " + fieldName);
-                    return new JsonResponse(Response.Codes.BAD_REQUEST, newRedemptionAddressResult);
+                    return _validationError("Missing Field: " + fieldName);
                 }
 
                 formData.put(fieldName, fieldValue);
             }
 
-            final List<String> optionalFields = null; //redemptionItem.getOptionalFields();
+            final List<String> optionalFields = _getOptionalFields();
             for (final String fieldName : optionalFields) {
                 final String fieldValue = parameters.get(fieldName);
                 formData.put(fieldName, fieldValue);
@@ -77,5 +86,20 @@ public class NewRedemptionAddressHandler implements RequestHandler<Environment> 
         newRedemptionAddressResult.setWasSuccess(true);
         newRedemptionAddressResult.setAddress(address);
         return new JsonResponse(Response.Codes.OK, newRedemptionAddressResult);
+    }
+
+    private Response _validationError(final String errorMessage) {
+        final RedeemApi.NewRedemptionAddressResult newRedemptionAddressResult = new RedeemApi.NewRedemptionAddressResult();
+        newRedemptionAddressResult.setWasSuccess(false);
+        newRedemptionAddressResult.setErrorMessage(errorMessage);
+        return new JsonResponse(Response.Codes.BAD_REQUEST, newRedemptionAddressResult);
+    }
+
+    private List<String> _getRequiredFields() {
+        return Arrays.asList("emailAddress");
+    }
+
+    private List<String> _getOptionalFields() {
+        return Arrays.asList();
     }
 }

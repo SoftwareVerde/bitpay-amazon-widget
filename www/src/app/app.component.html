@@ -10,9 +10,17 @@
         <div id="disclaimer">
             <small>* Restrictions apply, see <a href="https://amazon.com/gc-legal">amazon.com/gc-legal</a>.</small>
         </div>
-        <app-price-selector></app-price-selector>
+        <app-price-selector (priceSelectedEvent)="this.giftCardAmount = $event"></app-price-selector>
         <div>
-            <button type="button" type="button">Purchase</button>
+            <label for="email-address">Email Address:</label>
+            <input #email (keyup)="this.emailAddress = email.value" type="email" name="email-address" id="email-address" placeholder="user@example.com" required="required"/>
+        </div>
+        <div *ngIf="! this.shouldDisplayQrCode">
+            <button type="button" (click)="getQrCode()">Purchase</button>
+        </div>
+        <div *ngIf="this.shouldDisplayQrCode">
+            <app-purchase-qr-code></app-purchase-qr-code>
+            <button type="button" (click)="this.shouldDisplayQrCode = false">Cancel</button>
         </div>
     </form>
 </div>
