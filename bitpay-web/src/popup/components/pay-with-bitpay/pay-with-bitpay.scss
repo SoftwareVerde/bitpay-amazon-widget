@@ -1,0 +1,15 @@
+.pay-with-bitpay {
+  display: flex;
+  justify-content: center;
+  img {
+    display: block;
+    cursor: pointer;
+  }
+
+  &__pay-button {
+    height: 60px;
+  }
+  .action-button__spinner {
+    animation: unset;
+  }
+}

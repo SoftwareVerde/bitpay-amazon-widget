@@ -1,0 +1,13 @@
+@import "../../../styles/variables";
+
+.snack {
+  .MuiAlert-action {
+    align-items: start;
+  }
+  div.MuiAlert-icon {
+    color: $caution;
+  }
+  div.MuiAlert-root {
+    width: 270px;
+  }
+}

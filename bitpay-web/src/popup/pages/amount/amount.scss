@@ -1,0 +1,91 @@
+@import "../../../styles/variables";
+
+.amount-page {
+  display: flex;
+  padding: 10px;
+  flex-direction: column;
+  text-align: center;
+  padding-bottom: 15px;
+
+  &__title {
+    margin-bottom: -22px;
+  }
+
+  &__merchant-name {
+    font-size: 15px;
+    color: $slateDark;
+    font-weight: $medium;
+    margin-top: 3px;
+  }
+
+  &__promo {
+    font-size: 12px;
+    color: $blue;
+    text-align: center;
+    font-weight: $regular;
+    margin-top: 3px;
+  }
+
+  &__cta {
+    .action-button__footer {
+      margin-top: 0;
+    }
+  }
+
+  &__amount-box {
+    width: 100%;
+
+    &__amount {
+      font-size: 44px;
+      color: black;
+      text-align: center;
+      font-weight: $bold;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      &__value {
+        flex-grow: 1;
+      }
+
+      > button {
+        height: 30px;
+        width: 30px;
+        margin: 0 15px;
+      }
+    }
+
+    &__currency {
+      font-size: 16px;
+      color: rgba(0, 0, 0, 0.25);
+      font-weight: $medium;
+    }
+
+    &__denoms {
+      opacity: 0.75;
+      font-size: 12px;
+      color: $slateDark;
+      margin: 0 auto;
+      max-width: 200px;
+      margin-top: 3px;
+    }
+
+    &__wrapper {
+      flex-grow: 1;
+      display: flex;
+      align-items: center;
+      justify-self: center;
+      text-align: center;
+    }
+  }
+
+  &__input {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    opacity: 0;
+    width: 1px;
+    height: 1px;
+    pointer-events: none;
+  }
+}

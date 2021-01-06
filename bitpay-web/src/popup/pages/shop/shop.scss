@@ -1,0 +1,126 @@
+@import "../../../styles/variables";
+
+.shop-page {
+  position: relative;
+
+  &__content {
+    min-height: 333px;
+    padding: 5px 10px 10px;
+  }
+
+  &__section-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 12px 12px 16px;
+    font-weight: $medium;
+    font-size: 13px;
+    color: rgba($slateDark, 0.75);
+
+    &--action {
+      font-weight: $medium;
+      font-size: 12px;
+      color: $blue;
+    }
+
+    &--emoji {
+      justify-content: flex-start;
+      transform: translateY(-2px);
+      margin-right: 4px;
+      font-size: 15px;
+      color: black;
+      @-moz-document url-prefix() {
+        transform: translateY(0);
+        margin-right: 8px;
+      }
+    }
+
+    &--large {
+      font-weight: $bold;
+      font-size: 16px;
+      color: $fossil;
+    }
+
+    &--wrapper {
+      display: flex;
+      align-items: center;
+    }
+  }
+
+  &__divider {
+    background-color: rgba(black, 0.05);
+    height: 1px;
+    width: 90%;
+    margin: 18px auto;
+  }
+
+  &__categories {
+    $border-color: rgba(0, 0, 0, 0.05);
+    $input-border: 1px solid $border-color;
+    $left-padding: 16px;
+    $cell-height: 52px;
+
+    &__item {
+      font-weight: $medium;
+      font-size: 14px;
+      color: $blue;
+      display: flex;
+      align-items: center;
+      position: relative;
+      padding: 0 $left-padding + 2;
+      width: 100%;
+      text-align: left;
+      height: $cell-height;
+
+      &:not(:last-child) {
+        &:after {
+          content: "";
+          height: 1px;
+          background: $border-color;
+          bottom: 0;
+          right: 0;
+          left: calc(#{$left-padding});
+          position: absolute;
+          transition: all 250ms linear;
+        }
+      }
+
+      &:before {
+        content: "";
+        background: darken(#f8fbfd, 1%);
+        top: 0;
+        bottom: 0;
+        right: -10px;
+        left: -10px;
+        position: absolute;
+        z-index: -1;
+        transition: all 250ms ease-in-out;
+        opacity: 0;
+      }
+
+      &:hover {
+        &:before {
+          opacity: 1;
+        }
+        &:not(:last-child) {
+          &:after {
+            transform: scaleX(1.25);
+          }
+        }
+      }
+
+      &__icon {
+        font-size: 18px;
+        margin-right: 10px;
+        transform: translateY(-1px);
+        @-moz-document url-prefix() {
+          transform: translateY(0);
+        }
+      }
+    }
+  }
+
+  .zero-state {
+    margin-top: 25vh;
+  }
+}

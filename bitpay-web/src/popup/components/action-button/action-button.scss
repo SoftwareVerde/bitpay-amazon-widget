@@ -1,0 +1,92 @@
+@import "../../../styles/variables";
+
+.action-button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  padding: 12px;
+  color: white;
+  font-size: 16px;
+  font-weight: $bold;
+  background-color: $blue;
+  border-radius: 8px;
+  cursor: pointer;
+  user-select: none;
+
+  &--warn {
+    color: $warning;
+    background-color: rgba($color: $warning, $alpha: 0.1);
+    font-weight: $medium;
+    padding: 18px;
+  }
+
+  &--danger {
+    color: $caution;
+    background-color: rgba($color: $caution, $alpha: 0.1);
+    font-weight: $medium;
+    padding: 18px;
+  }
+
+  &__footer {
+    margin: 10px 4px 0;
+    &--fixed {
+      position: fixed;
+      bottom: 0;
+      width: 100%;
+      background-color: white;
+      padding: 14px 14px 18px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      box-shadow: 0 -2px 8px 0 rgba(black, 0.04);
+      text-align: center;
+
+      a {
+        width: 100%;
+      }
+    }
+    a {
+      width: 100%;
+    }
+  }
+
+  &__spinner {
+    animation: spin 1s linear infinite;
+    margin-right: 12px;
+    margin-top: -2px;
+  }
+
+  &--light {
+    background: $lightBlue;
+    color: $blue;
+    font-size: 16px;
+    font-weight: $medium;
+    padding: 10px 0;
+  }
+
+  &--pending {
+    background: $lightBlue;
+    color: $blue;
+    font-size: 16px;
+    font-weight: $medium;
+    padding: 10px 0;
+    height: 60px;
+    width: 270px;
+    margin-top: 0;
+  }
+}
+
+.secondary-button {
+  color: $blue;
+  font-weight: $bold;
+  font-size: 16px;
+  padding-top: 14px;
+}
+
+button {
+  &[disabled] {
+    opacity: 0.6 !important;
+    pointer-events: none;
+  }
+}

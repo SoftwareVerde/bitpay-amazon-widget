@@ -1,0 +1,84 @@
+@import "../../../styles/variables";
+
+.merchant-cta {
+  box-shadow: 0 2px 5px 1px rgba(48, 49, 51, 0.1);
+  border-radius: 8px;
+  margin: 0 12px;
+  padding: 14px;
+
+  $max-caption-width: 192px;
+  overflow: hidden;
+  flex-shrink: 0;
+
+  &__content {
+    display: flex;
+    align-items: center;
+    margin-bottom: 13px;
+
+    > img {
+      border-radius: 50%;
+      height: 39px;
+      margin-right: 17px;
+      width: 39px;
+    }
+
+    &__merchant {
+      font-size: 16px;
+      color: $slateDark;
+      font-weight: $bold;
+    }
+
+    &__caption {
+      font-size: 13px;
+      color: rgba($slateDark, 0.75);
+      font-weight: $regular;
+    }
+
+    &__promo {
+      font-size: 13px;
+      color: $blue;
+      font-weight: $medium;
+    }
+  }
+  > a {
+    display: block;
+    text-align: center;
+    background: $blue;
+    width: 100%;
+    color: white;
+    font-size: 13px;
+    font-weight: $bold;
+    background: $blue;
+    border-radius: 6px;
+    padding: 8px 0;
+
+    &.zero {
+      background: $lightBlue;
+      color: $blue;
+      font-size: 16px;
+      font-weight: $medium;
+      margin-top: 15px;
+      padding: 10px 0;
+    }
+  }
+
+  &__zero {
+    &__hero {
+      margin: -14px;
+      margin-bottom: 0;
+      max-width: 100%;
+      max-width: calc(100% + 28px);
+    }
+    &__title {
+      font-size: 18px;
+      color: $black;
+      font-weight: $bold;
+      margin: 6px 0;
+    }
+    &__description {
+      font-size: 13px;
+      color: $slateDark;
+      margin: 6px 0;
+    }
+  }
+}

@@ -1,0 +1,36 @@
+@import "../../../styles/variables";
+
+.tab-bar {
+  height: 50px;
+  flex-shrink: 0;
+  display: flex;
+  width: 100%;
+  background-color: white;
+  border-top: 1px solid rgba(black, 0.05);
+  padding: 0 20px;
+  user-select: none;
+
+  > a {
+    display: flex;
+    flex-grow: 1;
+    justify-content: center;
+  }
+
+  .active {
+    display: none;
+  }
+
+  .is-active {
+    font-weight: $bold;
+    .inactive {
+      display: none;
+    }
+    .active {
+      display: block;
+    }
+  }
+
+  img {
+    cursor: pointer;
+  }
+}

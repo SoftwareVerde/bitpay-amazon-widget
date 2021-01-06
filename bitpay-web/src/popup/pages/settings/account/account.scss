@@ -1,0 +1,69 @@
+@import "../../../../styles/variables";
+
+.account {
+  background: white;
+
+  .settings-group {
+    margin-bottom: 0;
+
+    &--no-border {
+      border: none;
+    }
+
+    &__item {
+      &--dark {
+        height: 70px;
+      }
+      &__avatar {
+        margin-right: 14px;
+        height: 34px;
+        width: 34px;
+      }
+      &__label {
+        .name,
+        .email {
+          color: $black;
+        }
+        .email {
+          font-weight: $medium;
+        }
+      }
+      &__note {
+        color: $slateDark;
+        font-size: 13px;
+        font-weight: $regular;
+      }
+    }
+  }
+
+  &__linked {
+    position: relative;
+  }
+
+  &__zero-state {
+    padding: 15px;
+    text-align: center;
+
+    &__sign-in {
+      display: block;
+      height: 60px;
+    }
+
+    .action-button__spinner {
+      animation: unset;
+    }
+  }
+  &__title {
+    font-size: 20px;
+    color: $black;
+    font-weight: $bold;
+    margin-top: 10px;
+    margin-bottom: 10px;
+  }
+  &__body {
+    font-size: 14px;
+    color: #565d6d;
+    margin-bottom: 30px;
+    padding: 0 15px;
+  }
+}

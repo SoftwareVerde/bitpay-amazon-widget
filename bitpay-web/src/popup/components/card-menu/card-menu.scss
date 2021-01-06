@@ -1,0 +1,49 @@
+@import "../../../styles/variables";
+
+.card-menu {
+  div {
+    background: $oceanBlue;
+    border-radius: 6px;
+    margin-left: 5px;
+    margin-top: -8px;
+  }
+
+  &__icon {
+    padding: 15px;
+    padding-top: 6px;
+    position: absolute;
+    right: 0;
+    top: 0;
+    z-index: 1;
+  }
+
+  &__item {
+    @at-root li#{&} {
+      color: white;
+      font-size: 12px;
+      font-weight: $medium;
+      justify-content: flex-start;
+      padding-right: 14px;
+      padding-left: 14px;
+      padding-top: 0;
+      padding-bottom: 0;
+      min-height: 27px;
+
+      @for $i from 1 through 3 {
+        &:nth-child(#{$i}) {
+          color: rgba(
+            $color: (
+              white
+            ),
+            $alpha:
+              1 -
+              (
+                $i - 1
+              ) *
+              0.25
+          );
+        }
+      }
+    }
+  }
+}
