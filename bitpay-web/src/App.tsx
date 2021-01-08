@@ -1,5 +1,6 @@
 import React from 'react';
 import './App.css';
+import './content-script/content-script'
 import Popup from './popup/popup';
 
 function App() {

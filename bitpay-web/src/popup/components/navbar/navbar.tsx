@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import { withRouter, RouteComponentProps } from 'react-router-dom';
 import { useTracking } from 'react-tracking';
-//import { browser } from 'webextension-polyfill-ts';
+import { browser } from '../../../webextension-polyfill-fake';
 import { fromEvent } from 'rxjs';
 import { debounceTime } from 'rxjs/operators';
 import { resizeFrame, FrameDimensions } from '../../../services/frame';
@@ -42,9 +42,7 @@ const Navbar: React.FC<RouteComponentProps & { initiallyCollapsed: boolean }> = 
   };
   const close = (): void => {
     tracking.trackEvent({ action: 'closedWidget' });
-    // TODO: replace
-    console.log("popup/components/navbar/navbar.tsx: browser.runtime.sendMessage({ name: 'POPUP_CLOSED' });");
-    //browser.runtime.sendMessage({ name: 'POPUP_CLOSED' });
+    browser.runtime.sendMessage({ name: 'POPUP_CLOSED' });
   };
   const routesWithBackButton = [
     '/brand',
@@ -63,8 +61,7 @@ const Navbar: React.FC<RouteComponentProps & { initiallyCollapsed: boolean }> = 
   const handleLogoClick = (): void => {
     if (payMode) expand();
   };
-  // TODO: replace
-  console.log("browser.runtime.sendMessage({ name: 'NAVBAR_MODE_CHANGED', mode: payMode ? 'pay' : 'default' });");
+  browser.runtime.sendMessage({ name: 'NAVBAR_MODE_CHANGED', mode: payMode ? 'pay' : 'default' });
   useEffect(() => {
     fromEvent<MessageEvent>(window, 'message')
       .pipe(debounceTime(1000))

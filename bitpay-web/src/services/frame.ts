@@ -1,4 +1,4 @@
-//import { browser } from 'webextension-polyfill-ts';
+import { browser } from '../webextension-polyfill-fake';
 
 export enum FrameDimensions {
   amountPageHeight = 360,
@@ -11,9 +11,7 @@ export enum FrameDimensions {
 }
 
 export const resizeFrame = (height: number): void => {
-  // TODO: replace
-  console.log("services/frame.ts: resizeFrame " + height);
-  //browser.runtime.sendMessage({ name: `POPUP_RESIZED`, height });
+  browser.runtime.sendMessage({ name: `POPUP_RESIZED`, height });
 };
 
 export const resizeToFitPage = (ref: React.RefObject<HTMLDivElement>, padding = 0, delay = 10): void => {

@@ -73,7 +73,11 @@ const Popup: React.FC = () => {
   };
 
   useEffect(() => {
-    if (Date.now() - popupLaunchTime.current < 1000) return;
+    const timeDiff = Date.now() - popupLaunchTime.current
+    console.log("updateMerchants? : " + timeDiff);
+    if (timeDiff < 1000) return;
+    //if (Date.now() - popupLaunchTime.current < 1000) return;
+    console.log("updateMerchants!");
     const updateMerchants = async (): Promise<void> => {
       const [newDirectory, newMerchants] = await fetchDirectoryAndMerchants();
       setDirectory(saturateDirectory(newDirectory, newMerchants));
@@ -127,7 +131,6 @@ const Popup: React.FC = () => {
       });
     };
     attemptToRedeemGiftCards();
-  // eslint-disable-next-line
   }, [purchasedGiftCards, realtimeInvoiceIds]);
 
   useEffect(() => {

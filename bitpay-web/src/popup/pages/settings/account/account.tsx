@@ -2,7 +2,7 @@ import './account.scss';
 import React, { useRef, useEffect, Dispatch, SetStateAction, useState } from 'react';
 import { RouteComponentProps } from 'react-router-dom';
 import { useTracking } from 'react-tracking';
-//import { browser } from 'webextension-polyfill-ts';
+import { browser } from '../../../../webextension-polyfill-fake';
 import { motion, AnimatePresence } from 'framer-motion';
 import { BitpayUser } from '../../../../services/bitpay-id';
 import { resizeToFitPage } from '../../../../services/frame';
@@ -30,14 +30,12 @@ const Account: React.FC<RouteComponentProps & {
     if (!awaitingAuthentication) return;
     const connectBitpayId = async (): Promise<void> => {
       tracking.trackEvent({ action: 'clickedSignInButton' });
-      // TODO: replace
-      console.log("popup/pages/settings/account/account.tsx: browser.runtime.sendMessage ... LAUNCH_WINDOW ...");
-      //await browser.runtime.sendMessage({
-      //  name: 'LAUNCH_WINDOW',
-      //  url: `${process.env.API_ORIGIN}/wallet-card/login?context=bpa`,
-      //  width: 350,
-      //  height: 600
-      //});
+      await browser.runtime.sendMessage({
+        name: 'LAUNCH_WINDOW',
+        url: `${process.env.API_ORIGIN}/wallet-card/login?context=bpa`,
+        width: 350,
+        height: 600
+      });
       const newUser = await get<BitpayUser>('bitpayUser');
       if (!newUser) {
         setAwaitingAuthentication(false);

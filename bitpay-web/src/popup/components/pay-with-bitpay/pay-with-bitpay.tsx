@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { RouteComponentProps } from 'react-router-dom';
-//import { browser } from 'webextension-polyfill-ts';
+import { browser } from '../../../webextension-polyfill-fake';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useTracking } from 'react-tracking';
 import { GiftCard, CardConfig, GiftCardInvoiceParams } from '../../../services/gift-card.types';
@@ -99,12 +99,10 @@ const PayWithBitpay: React.FC<Partial<RouteComponentProps> & {
         ...(user && user.eid && { userEid: user.eid })
       } as GiftCard;
       await saveGiftCard(unredeemedGiftCard);
-      // TODO: replace
-      console.log("popup/components/pay-with-bitpay/pay-with-bitpay.tsx: browser.runtime.sendMessage ... LAUNCH_WINDOW ...");
-      const launchPromise = new Promise<any>((resolve) => resolve({ data: { status: "none" } })); /*browser.runtime.sendMessage({
+      const launchPromise = browser.runtime.sendMessage({
         name: 'LAUNCH_WINDOW',
         url: `${process.env.API_ORIGIN}/invoice?id=${invoiceId}&view=popup`
-      });*/
+      });
       const res = await Promise.race([
         launchPromise.catch(() => ({ data: { status: 'error' } })),
         waitForServerEvent({ unredeemedGiftCard, user }).catch(async err => {
