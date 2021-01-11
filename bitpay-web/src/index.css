@@ -1,3 +1,7 @@
+/**
+ * General top-level CSS.  See App.css for overrides from original source.
+ */
+
 html, body, #root {
   overflow: scroll !important;
 }

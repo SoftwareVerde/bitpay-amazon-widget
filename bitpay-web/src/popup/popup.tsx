@@ -73,11 +73,7 @@ const Popup: React.FC = () => {
   };
 
   useEffect(() => {
-    const timeDiff = Date.now() - popupLaunchTime.current
-    console.log("updateMerchants? : " + timeDiff);
-    if (timeDiff < 1000) return;
-    //if (Date.now() - popupLaunchTime.current < 1000) return;
-    console.log("updateMerchants!");
+    if (Date.now() - popupLaunchTime.current < 1000) return;
     const updateMerchants = async (): Promise<void> => {
       const [newDirectory, newMerchants] = await fetchDirectoryAndMerchants();
       setDirectory(saturateDirectory(newDirectory, newMerchants));

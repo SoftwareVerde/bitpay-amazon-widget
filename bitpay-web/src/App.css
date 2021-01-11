@@ -1,5 +1,29 @@
 
+/**
+ * Fixes relating to imported BitPay assets
+ */
+
 .App {
 }
 
+.action-button__footer--fixed {
+    position: absolute !important;
+}
+
+.brand-page {
+    position: relative;
+}
+
+.amount-page__title {
+    margin-bottom: 0px !important;
+}
+
+.pay-with-bitpay {
+    margin-top: 10px;
+}
+
+div.MuiSnackbar-root[style] {
+    left: 50% !important;
+    right: auto !important;
+}
 
