@@ -78,6 +78,7 @@ const Navbar: React.FC<RouteComponentProps & { initiallyCollapsed: boolean }> = 
       {payMode && <div className="pay-click-handler" onClick={handleLogoClick} />}
       <BackButton show={!collapsed && showBackButton} onClick={goBack} />
       {/*<BitpayLogo solo={!collapsed && showBackButton} payMode={payMode} />*/}
+      {!showBackButton && <BitpayLogo solo={!collapsed && showBackButton} payMode={payMode} />}
       <Toggle collapsed={collapsed} expand={expand} collapse={collapse} close={close} payMode={payMode} />
     </div>
   );

@@ -20,11 +20,29 @@ code {
     monospace;
 }
 
+.hidden {
+    display: none !important;
+}
+
 #root {
     padding: 5px;
     -moz-border-radius: 10px;
     -webkit-border-radius: 10px;
     border-radius: 10px;
     border: black solid 1px;
+}
+
+#invoice-frame {
+    width: 100%;
+    min-height: 75vh;
+}
+
+#cancel-button {
+    width: calc(100% - 10px);
+    padding: 10px;
+    border: thin solid red;
+    border-radius: 5px;
+    margin: 5px;
+    color: red;
 }
 

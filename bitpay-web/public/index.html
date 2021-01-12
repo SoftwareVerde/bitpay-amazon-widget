@@ -13,7 +13,13 @@
   </head>
   <body>
     <noscript>You need to enable JavaScript to run this app.</noscript>
-    <div id="root"></div>
+    <div id="root">
+        <div id="app-root">
+    </div>
+    <div id="invoice-area" class="hidden">
+        <button id="cancel-button">Cancel</button>
+        <iframe id="invoice-frame" name="invoice-frame"></iframe>
+    </div>
     <script src="js/bundle.js"></script>
   </body>
 </html>

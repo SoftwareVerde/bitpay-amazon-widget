@@ -16,11 +16,13 @@ let cachedMerchants: Merchant[] | undefined;
 let cacheDate = 0;
 const cacheValidityDuration = 1000 * 60;
 
-const windowIdResolveMap: { [windowId: number]: (message: GiftCardInvoiceMessage) => GiftCardInvoiceMessage } = {};
+var popupWindow : any;
+var giftCardInvoiceCallback : ((message: GiftCardInvoiceMessage) => GiftCardInvoiceMessage) | undefined;
+//const windowIdResolveMap: { [windowId: number]: (message: GiftCardInvoiceMessage) => GiftCardInvoiceMessage } = {};
 
-function getIconPath(bitpayAccepted: boolean): string {
-  return `/assets/icons/favicon${bitpayAccepted ? '' : '-inactive'}-128.png`;
-}
+//function getIconPath(bitpayAccepted: boolean): string {
+//  return `/assets/icons/favicon${bitpayAccepted ? '' : '-inactive'}-128.png`;
+//}
 
 function setIcon(bitpayAccepted: boolean): void {
   console.log("setIcon: " +  bitpayAccepted);
@@ -48,23 +50,24 @@ function isGiftCardInvoice(url: string): boolean {
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-async function sendMessageToTab(message: any, tab: any): Promise<void> {
+async function sendMessageToTab(message: any/*, tab: any*/): Promise<void> {
   //return browser.tabs.sendMessage(tab.id as number, message);
   if (message !== undefined) {
-    for (var callback of contentScriptCallbacks) {
-       callback(message);
-    }
+    console.log("Not calling " + contentScriptCallbacks.length + " callbacks.");
+    //for (var callback of contentScriptCallbacks) {
+    //   callback(message);
+    //}
   }
 }
 
-async function handleUrlChange(url: string, tab?: any): Promise<void> {
+async function handleUrlChange(url: string/*, tab?: any*/): Promise<void> {
   const merchants = await getCachedMerchants();
   const bitpayAccepted = isBitPayAccepted(url, merchants);
   const merchant = getBitPayMerchantFromUrl(url, merchants);
   const promptAtCheckout = await get<boolean>('promptAtCheckout');
   const shouldPromptAtCheckout = typeof promptAtCheckout === 'undefined' ? true : promptAtCheckout;
-  if (merchant && tab && shouldPromptAtCheckout) {
-    sendMessageToTab({ merchant, name: 'SHOW_WIDGET_IN_PAY_MODE' }, tab);
+  if (merchant /*&& tab*/ && shouldPromptAtCheckout) {
+    sendMessageToTab({ merchant, name: 'SHOW_WIDGET_IN_PAY_MODE' }/*, tab*/);
   }
   await setIcon(bitpayAccepted || isGiftCardInvoice(url));
   await refreshCachedMerchantsIfNeeded();
@@ -89,13 +92,16 @@ async function createClientIdIfNotExists(): Promise<void> {
 }
 
 //browser.browserAction.onClicked.addListener(async tab => {
-//  const merchant = tab.url && getBitPayMerchantFromUrl(tab.url, await getCachedMerchants());
-//  await browser.tabs
-//    .sendMessage(tab.id as number, {
+//window.addEventListener("click", async (event: MouseEvent) => {
+//  //const merchant = tab.url && getBitPayMerchantFromUrl(tab.url, await getCachedMerchants());
+//  const merchants = await getCachedMerchants();
+//  const merchant = getBitPayMerchantFromUrl(window.location.href, merchants);
+//  await browser.runtime
+//    .sendMessage(undefined, {
 //      name: 'EXTENSION_ICON_CLICKED',
 //      merchant
-//    })
-//    .catch(() => browser.tabs.create({ url: `${process.env.API_ORIGIN}/extension?launchExtension=true` }));
+//    });
+//    //.catch(() => browser.tabs.create({ url: `${process.env.API_ORIGIN}/extension?launchExtension=true` }));
 //});
 
 window.onload = async () => {
@@ -108,26 +114,46 @@ window.onload = async () => {
 };
 
 async function launchWindowAndListenForEvents({
-  url,
+  url/*,
   height = 735,
-  width = 430
+  width = 430*/
 }: {
   url: string;
-  height: number;
-  width: number;
+  //height: number;
+  //width: number;
 }): Promise<GiftCardInvoiceMessage> {
-  const { id, height: winHeight, width: winWidth } = await browser.windows.create({
+  //const { id, height: winHeight, width: winWidth } = await browser.windows.create({
+  popupWindow = window.open(
     url,
-    type: 'popup',
-    height,
-    width
-  });
-  if ((winHeight as number) !== height || (winWidth as number) !== width) {
-    await browser.windows.update(id as number, { height, width });
-  }
+    "invoice-frame"
+  );
+
+  const popupRoot = document.getElementById("app-root")!;
+  const invoiceArea = document.getElementById("invoice-area")!;
+  const invoiceFrame = document.getElementById("invoice-frame")! as HTMLIFrameElement;
+  const cancelButton = document.getElementById("cancel-button")!;
+
+  popupRoot.classList.add("hidden");
+  invoiceArea.classList.remove("hidden");
+
   const promise = new Promise<GiftCardInvoiceMessage>(resolve => {
-    windowIdResolveMap[id as number] = resolve as () => GiftCardInvoiceMessage;
+    giftCardInvoiceCallback = (data: any) : GiftCardInvoiceMessage => {
+        resolve(data);
+
+        // return to main screen
+        invoiceArea.classList.add("hidden");
+        popupRoot.classList.remove("hidden");
+        invoiceFrame.src = '';
+
+        return data;
+    };
   });
+
+  cancelButton.onclick = () => {
+      const resolveFn = giftCardInvoiceCallback;
+      return resolveFn && resolveFn({ data: { status: 'closed' } });
+  };
+
   const message = await promise;
   return message;
 }
@@ -136,21 +162,22 @@ async function pairBitpayId(payload: { secret: string; code?: string }): Promise
   await generatePairingToken(payload);
 }
 
-//browser.windows.onRemoved.addListener(windowId => {
-//  const resolveFn = windowIdResolveMap[windowId];
-//  return resolveFn && resolveFn({ data: { status: 'closed' } });
-//});
-
-var contentScriptCallbacks: EventListener[] = [];
+var contentScriptCallbacks: ((message: any, sender: any) => any)[] = [];
 
 var browser: {[k: string]: any} = {};
 browser.runtime = {}
+//browser.runtime.getURL = (path: string) => {
+//    return window.location.href;
+//}
 browser.runtime.onMessage = {};
 browser.runtime.onMessage.addListener = (callback: (message: any, sender: any) => any) => {
     contentScriptCallbacks.push(callback);
 };
 browser.runtime.sendMessage = async (extensionId?: string, message: any, sender: object) => {
   //const { tab } = sender;
+  if (extensionId !== undefined && message === undefined) {
+    message = extensionId;
+  }
   console.log(JSON.stringify(message) + " --- " + JSON.stringify(sender));
   switch (message && message.name) {
     case 'LAUNCH_TAB':
@@ -159,35 +186,36 @@ browser.runtime.sendMessage = async (extensionId?: string, message: any, sender:
       return;
     case 'LAUNCH_WINDOW':
       //return tab && launchWindowAndListenForEvents(message);
-      console.log("LAUNCH_WINDOW: " + message);
-      return;
+      console.log("LAUNCH_WINDOW");
+      return launchWindowAndListenForEvents(message);
     case 'ID_CONNECTED': {
+      console.log("ID_CONNECTED: " + message);
       //const resolveFn = windowIdResolveMap[tab?.windowId as number];
-      //delete windowIdResolveMap[tab?.windowId as number];
+      const resolveFn = giftCardInvoiceCallback;
+      giftCardInvoiceCallback = undefined;
       //browser.tabs.remove(tab?.id as number).catch(() => {
       //  if (tab?.id) {
       //    browser.tabs.executeScript(tab?.id as number, { code: 'window.close()' });
       //  }
       //});
-      //await pairBitpayId(message.data);
-      //return resolveFn && resolveFn({ data: { status: 'complete' } });
-      console.log("ID_CONNECTED");
-      return;
+      popupWindow.close();
+      await pairBitpayId(message.data);
+      return resolveFn && resolveFn({ data: { status: 'complete' } });
     }
     case 'INVOICE_EVENT': {
-      //if (!message.data || !message.data.status) {
-      //  return;
-      //}
-      //const resolveFn = windowIdResolveMap[tab?.windowId as number];
-      //return resolveFn && resolveFn(message);
       console.log("INVOICE_EVENT");
+      if (!message.data || !message.data.status) {
+        return;
+      }
+      const resolveFn = giftCardInvoiceCallback;
+      return resolveFn && resolveFn(message);
       return;
     }
     case 'REDIRECT':
       //return browser.tabs.update({
       //  url: message.url
       //});
-      console.log("REDIRECT");
+      console.log("REDIRECT: " + message.url);
       return;
     case 'REFRESH_MERCHANT_CACHE':
       console.log("REFRESH_MERCHANT_CACHE");
@@ -198,10 +226,10 @@ browser.runtime.sendMessage = async (extensionId?: string, message: any, sender:
     case 'URL_CHANGED':
       console.log("URL_CHANGED: " + message.url);
       //return message.url && handleUrlChange(message.url, tab);
-      return message.url && handleUrlChange(message.url, undefined);
+      return message.url && handleUrlChange(message.url);
     default:
       //return tab && sendMessageToTab(message, tab);
-      return sendMessageToTab(message, undefined);
+      return sendMessageToTab(message);
   }
 };
 
