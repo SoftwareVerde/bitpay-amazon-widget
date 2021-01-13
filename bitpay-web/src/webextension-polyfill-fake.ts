@@ -110,7 +110,7 @@ window.onload = async () => {
 //  allTabs.forEach(tab =>
 //    browser.tabs.executeScript(tab.id, { file: 'js/contentScript.bundle.js' }).catch(() => undefined)
 //  );
-  await Promise.all([refreshCachedMerchantsIfNeeded(), createClientIdIfNotExists()]);
+  await Promise.all([/*refreshCachedMerchantsIfNeeded(), */createClientIdIfNotExists()]);
 };
 
 async function launchWindowAndListenForEvents({
@@ -125,7 +125,7 @@ async function launchWindowAndListenForEvents({
   //const { id, height: winHeight, width: winWidth } = await browser.windows.create({
   popupWindow = window.open(
     url,
-    null,
+    undefined,
     "height=" + height + ",width=" + width
     //"invoice-frame"
   );
@@ -197,14 +197,11 @@ browser.runtime.sendMessage = async (extensionId?: string, message: any, sender:
   switch (message && message.name) {
     case 'LAUNCH_TAB':
       //return browser.tabs.create({ url: message.url });
-      console.log("LAUNCH_TAB: " + message.url);
       return;
     case 'LAUNCH_WINDOW':
       //return tab && launchWindowAndListenForEvents(message);
-      console.log("LAUNCH_WINDOW");
       return launchWindowAndListenForEvents(message);
     case 'ID_CONNECTED': {
-      console.log("ID_CONNECTED: " + message);
       //const resolveFn = windowIdResolveMap[tab?.windowId as number];
       const resolveFn = giftCardInvoiceCallback;
       giftCardInvoiceCallback = undefined;
@@ -230,16 +227,12 @@ browser.runtime.sendMessage = async (extensionId?: string, message: any, sender:
       //return browser.tabs.update({
       //  url: message.url
       //});
-      console.log("REDIRECT: " + message.url);
       return;
     case 'REFRESH_MERCHANT_CACHE':
-      console.log("REFRESH_MERCHANT_CACHE");
       return refreshCachedMerchants();
     case 'TRACK':
-      console.log("TRACK: " + message.event);
       return dispatchEvent(message.event);
     case 'URL_CHANGED':
-      console.log("URL_CHANGED: " + message.url);
       //return message.url && handleUrlChange(message.url, tab);
       return message.url && handleUrlChange(message.url);
     default:
