@@ -114,45 +114,60 @@ window.onload = async () => {
 };
 
 async function launchWindowAndListenForEvents({
-  url/*,
+  url,
   height = 735,
-  width = 430*/
+  width = 430
 }: {
   url: string;
-  //height: number;
-  //width: number;
+  height: number;
+  width: number;
 }): Promise<GiftCardInvoiceMessage> {
   //const { id, height: winHeight, width: winWidth } = await browser.windows.create({
   popupWindow = window.open(
     url,
-    "invoice-frame"
+    null,
+    "height=" + height + ",width=" + width
+    //"invoice-frame"
   );
 
-  const popupRoot = document.getElementById("app-root")!;
-  const invoiceArea = document.getElementById("invoice-area")!;
-  const invoiceFrame = document.getElementById("invoice-frame")! as HTMLIFrameElement;
-  const cancelButton = document.getElementById("cancel-button")!;
+  //const popupRoot = document.getElementById("app-root")!;
+  //const invoiceArea = document.getElementById("invoice-area")!;
+  //const invoiceFrame = document.getElementById("invoice-frame")! as HTMLIFrameElement;
+  //const cancelButton = document.getElementById("cancel-button")!;
 
-  popupRoot.classList.add("hidden");
-  invoiceArea.classList.remove("hidden");
+  //popupRoot.classList.add("hidden");
+  //invoiceArea.classList.remove("hidden");
+
+  var interval = window.setInterval(function() {
+    try {
+      if (popupWindow == null || popupWindow.closed) {
+        window.clearInterval(interval);
+
+        const resolveFn = giftCardInvoiceCallback;
+        return resolveFn && resolveFn({ data: { status: 'closed' } });
+      }
+    }
+    catch (e) {
+    }
+  }, 500);
 
   const promise = new Promise<GiftCardInvoiceMessage>(resolve => {
     giftCardInvoiceCallback = (data: any) : GiftCardInvoiceMessage => {
         resolve(data);
 
         // return to main screen
-        invoiceArea.classList.add("hidden");
-        popupRoot.classList.remove("hidden");
-        invoiceFrame.src = '';
+        //invoiceArea.classList.add("hidden");
+        //popupRoot.classList.remove("hidden");
+        //invoiceFrame.src = '';
 
         return data;
     };
   });
 
-  cancelButton.onclick = () => {
-      const resolveFn = giftCardInvoiceCallback;
-      return resolveFn && resolveFn({ data: { status: 'closed' } });
-  };
+  //cancelButton.onclick = () => {
+  //    const resolveFn = giftCardInvoiceCallback;
+  //    return resolveFn && resolveFn({ data: { status: 'closed' } });
+  //};
 
   const message = await promise;
   return message;
