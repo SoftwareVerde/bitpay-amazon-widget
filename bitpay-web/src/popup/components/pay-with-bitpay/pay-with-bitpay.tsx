@@ -111,7 +111,6 @@ const PayWithBitpay: React.FC<Partial<RouteComponentProps> & {
           Promise.resolve({ data: { status: 'error' } });
         })
       ]);
-      console.log("res: " + JSON.stringify(res)); // TODO: remove
       if (res.data && res.data.status === 'closed') {
         tracking.trackEvent({ action: 'closedInvoice', brand: cardConfig.name });
         await deleteGiftCard(unredeemedGiftCard);
@@ -145,7 +144,6 @@ const PayWithBitpay: React.FC<Partial<RouteComponentProps> & {
       }
     };
     launchInvoice().catch(err => {
-      console.log(err); // TODO: remove
       setErrorMessage(err.message || 'An unexpected error occurred');
       setAwaitingPayment(false);
     });
