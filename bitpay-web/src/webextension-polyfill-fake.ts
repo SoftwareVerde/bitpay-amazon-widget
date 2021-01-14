@@ -143,7 +143,7 @@ async function launchWindowAndListenForEvents({
         window.clearInterval(interval);
 
         const resolveFn = giftCardInvoiceCallback;
-        return resolveFn && resolveFn({ data: { status: 'closed' } });
+        resolveFn && resolveFn({ data: { status: 'closed' } });
       }
     }
     catch (e) {
