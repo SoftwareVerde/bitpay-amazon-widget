@@ -16,8 +16,8 @@ let cachedMerchants: Merchant[] | undefined;
 let cacheDate = 0;
 const cacheValidityDuration = 1000 * 60;
 
-var popupWindow : any;
-var giftCardInvoiceCallback : ((message: GiftCardInvoiceMessage) => GiftCardInvoiceMessage) | undefined;
+let popupWindow : any;
+let giftCardInvoiceCallback : ((message: GiftCardInvoiceMessage) => GiftCardInvoiceMessage) | undefined;
 //const windowIdResolveMap: { [windowId: number]: (message: GiftCardInvoiceMessage) => GiftCardInvoiceMessage } = {};
 
 //function getIconPath(bitpayAccepted: boolean): string {
@@ -54,7 +54,7 @@ async function sendMessageToTab(message: any/*, tab: any*/): Promise<void> {
   //return browser.tabs.sendMessage(tab.id as number, message);
   if (message !== undefined) {
     console.log("Not calling " + contentScriptCallbacks.length + " callbacks.");
-    //for (var callback of contentScriptCallbacks) {
+    //for (let callback of contentScriptCallbacks) {
     //   callback(message);
     //}
   }
@@ -138,7 +138,7 @@ async function launchWindowAndListenForEvents({
   //popupRoot.classList.add("hidden");
   //invoiceArea.classList.remove("hidden");
 
-  var interval = window.setInterval(function() {
+  let interval = window.setInterval(function() {
     try {
       if (popupWindow == null || popupWindow.closed) {
         window.clearInterval(interval);
@@ -177,13 +177,32 @@ async function pairBitpayId(payload: { secret: string; code?: string }): Promise
   await generatePairingToken(payload);
 }
 
-var contentScriptCallbacks: ((message: any, sender: any) => any)[] = [];
+let contentScriptCallbacks: ((message: any, sender: any) => any)[] = [];
 
-var browser: {[k: string]: any} = {};
-browser.runtime = {}
-//browser.runtime.getURL = (path: string) => {
-//    return window.location.href;
-//}
+let browser: {[k: string]: any} = {
+    storage: {
+        local: {}
+    },
+    runtime: {
+        onMessage: {}
+    }
+};
+browser.storage.local.get = async (key: string): any => {
+  let value = window.localStorage.getItem(key);
+  if (! value) {
+    return { [key]: undefined };
+  }
+  return { [key]: JSON.parse(value) };
+}
+browser.storage.local.set = async (object: any) => {
+  for (let key in object) {
+      let value = JSON.stringify(object[key]);
+      window.localStorage.setItem(key, value);
+  }
+}
+browser.storage.local.remove = async (key: string) => {
+  window.localStorage.removeItem(key);
+}
 browser.runtime.onMessage = {};
 browser.runtime.onMessage.addListener = (callback: (message: any, sender: any) => any) => {
     contentScriptCallbacks.push(callback);
