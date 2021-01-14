@@ -4,7 +4,7 @@ import './App.css';
 import {
   Merchant,
 } from './services/merchant';
-import { get, set } from './services/storage'
+import { get } from './services/storage'
 import { GiftCard, CardConfig } from './services/gift-card.types';
 import { BitpayUser } from './services/bitpay-id';
 import Amount from './popup/pages/amount/amount'
@@ -42,17 +42,17 @@ const App: React.FC<{
             <Route
               path="/amount/:brand"
               render={(props): JSX.Element => (
-                    <Amount
-                        clientId={clientId}
-                        email={email}
-                        initialAmount={amount}
-                        initiallyCollapsed={initiallyCollapsed}
-                        purchasedGiftCards={purchasedGiftCards}
-                        setPurchasedGiftCards={setPurchasedGiftCards}
-                        supportedMerchant={supportedMerchant}
-                        user={user}
-                        {...props}
-                    />
+                <Amount
+                  clientId={clientId}
+                  email={email}
+                  initialAmount={amount}
+                  initiallyCollapsed={initiallyCollapsed}
+                  purchasedGiftCards={purchasedGiftCards}
+                  setPurchasedGiftCards={setPurchasedGiftCards}
+                  supportedMerchant={supportedMerchant}
+                  user={user}
+                  {...props}
+                />
               )}
             />
             <Route
