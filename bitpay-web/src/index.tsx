@@ -14,9 +14,9 @@ setTimeout(async () => {
     // this ensures it will list them on the initial page load
     const [newDirectory, newMerchants] = await fetchDirectoryAndMerchants();
     const merchant = await getBitPayMerchantFromUrl("https://amazon.com/", newMerchants)!;
-    const cardConfigs = await get<CardConfig[]>('supportedGiftCards');
+    const supportedGiftCards = await get<CardConfig[]>('supportedGiftCards');
     let cardConfig: CardConfig | undefined = undefined;
-    for (cardConfig of cardConfigs) {
+    for (cardConfig of supportedGiftCards) {
         if (cardConfig.name == "Amazon.com") {
             break;
         }
@@ -27,8 +27,16 @@ setTimeout(async () => {
         clientId = await get<string>('clientId');
     }
 
+    let email = await get<string>('email');
+
     ReactDOM.render(
-      <App clientId={clientId} merchant={merchant} cardConfig={cardConfig!} />,
+      <App
+        clientId={clientId}
+        emailAddress={email}
+        merchant={merchant}
+        cardConfig={cardConfig!}
+        supportedGiftCards={supportedGiftCards}
+        />,
       document.getElementById('app-root')
     );
 }, 0);

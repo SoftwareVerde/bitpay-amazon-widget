@@ -46,7 +46,6 @@ const PayWithBitpay: React.FC<Partial<RouteComponentProps> & {
   supportedMerchant,
   onInvalidParams = (): void => undefined
 }) => {
-  console.log("Purchased Gift Cards: " + JSON.stringify(setPurchasedGiftCards));
   const tracking = useTracking();
   const [errorMessage, setErrorMessage] = useState('');
   const [awaitingPayment, setAwaitingPayment] = useState(false);

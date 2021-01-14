@@ -18,7 +18,6 @@ const cacheValidityDuration = 1000 * 60;
 
 let popupWindow : any;
 let giftCardInvoiceCallback : ((message: GiftCardInvoiceMessage) => GiftCardInvoiceMessage) | undefined;
-//const windowIdResolveMap: { [windowId: number]: (message: GiftCardInvoiceMessage) => GiftCardInvoiceMessage } = {};
 
 //function getIconPath(bitpayAccepted: boolean): string {
 //  return `/assets/icons/favicon${bitpayAccepted ? '' : '-inactive'}-128.png`;
@@ -203,32 +202,25 @@ browser.storage.local.set = async (object: any) => {
 browser.storage.local.remove = async (key: string) => {
   window.localStorage.removeItem(key);
 }
+
 browser.runtime.onMessage = {};
 browser.runtime.onMessage.addListener = (callback: (message: any, sender: any) => any) => {
     contentScriptCallbacks.push(callback);
 };
 browser.runtime.sendMessage = async (extensionId?: string, message: any, sender: object) => {
-  //const { tab } = sender;
   if (extensionId !== undefined && message === undefined) {
     message = extensionId;
   }
   console.log(JSON.stringify(message) + " --- " + JSON.stringify(sender));
   switch (message && message.name) {
     case 'LAUNCH_TAB':
-      //return browser.tabs.create({ url: message.url });
+      window.open(message.url);
       return;
     case 'LAUNCH_WINDOW':
-      //return tab && launchWindowAndListenForEvents(message);
       return launchWindowAndListenForEvents(message);
     case 'ID_CONNECTED': {
-      //const resolveFn = windowIdResolveMap[tab?.windowId as number];
       const resolveFn = giftCardInvoiceCallback;
       giftCardInvoiceCallback = undefined;
-      //browser.tabs.remove(tab?.id as number).catch(() => {
-      //  if (tab?.id) {
-      //    browser.tabs.executeScript(tab?.id as number, { code: 'window.close()' });
-      //  }
-      //});
       popupWindow.close();
       await pairBitpayId(message.data);
       return resolveFn && resolveFn({ data: { status: 'complete' } });
@@ -243,19 +235,14 @@ browser.runtime.sendMessage = async (extensionId?: string, message: any, sender:
       return;
     }
     case 'REDIRECT':
-      //return browser.tabs.update({
-      //  url: message.url
-      //});
       return;
     case 'REFRESH_MERCHANT_CACHE':
       return refreshCachedMerchants();
     case 'TRACK':
       return dispatchEvent(message.event);
     case 'URL_CHANGED':
-      //return message.url && handleUrlChange(message.url, tab);
       return message.url && handleUrlChange(message.url);
     default:
-      //return tab && sendMessageToTab(message, tab);
       return sendMessageToTab(message);
   }
 };
