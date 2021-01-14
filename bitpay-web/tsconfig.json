@@ -28,7 +28,7 @@
     "pretty": true,
     "newLine": "lf",
     "stripInternal": true,
-    "noUnusedLocals": true
+    "noUnusedLocals": false
   },
   "include": [
     "src"
