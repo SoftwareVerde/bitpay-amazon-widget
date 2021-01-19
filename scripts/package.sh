@@ -14,7 +14,8 @@ chmod -R 770 $LOGS_DIR
 
 cp -R build/libs out/bin
 cp -R conf out/conf
-cp -R www out/www
+
+./scripts/make-www.sh
 
 jarPath="$(ls out/bin/bitcoin-cash-gift-cards-*.jar | head -n 1)"
 jarName="$(basename $jarPath)"

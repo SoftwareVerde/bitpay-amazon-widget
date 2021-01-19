@@ -168,7 +168,7 @@ function autoShowCollapsedWidgetIfSupportedMerchant(merchant: Merchant): void {
   }
 }
 
-browser.runtime.onMessage.addListener(async message => {
+browser.runtime.onMessage.addListener(async (message: any) => {
   const messageName = message && message.name;
   switch (messageName) {
     case 'EXTENSION_ICON_CLICKED':
