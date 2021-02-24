@@ -38,7 +38,20 @@ via:
 
 ## Embedding Widget into your Website
 
+Embedding the widget on any webpage is very simple:
 
+    <iframe class="bitpay" src="/bitpay.html"></iframe>
+
+And add the following css to your webpage:
+
+    iframe.bitpay {
+        margin: auto;
+        margin-top: 3em;
+        border: none;
+        display: block;
+        width: 400px;
+        height: 600px;
+    }
 
 ## License
 

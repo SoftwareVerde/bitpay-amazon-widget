@@ -1,0 +1,13 @@
+body {
+    background-color: #012351;
+    color: #FFFFFF;
+}
+
+iframe.bitpay {
+    margin: auto;
+    margin-top: 3em;
+    border: none;
+    display: block;
+    width: 400px;
+    height: 600px;
+}

@@ -27,3 +27,12 @@ div.MuiSnackbar-root[style] {
     right: auto !important;
 }
 
+body {
+    margin: 0;
+    background-color: none;
+    background: none;
+}
+
+#root {
+    background-color: #FFFFFF;
+}
