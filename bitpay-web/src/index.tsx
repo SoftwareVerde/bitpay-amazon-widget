@@ -14,14 +14,17 @@ setTimeout(async () => {
     // make sure we have merchants cached before Popup is rendered
     // this ensures it will list them on the initial page load
     const [newDirectory, newMerchants] = await fetchDirectoryAndMerchants();
-    const merchant = await getBitPayMerchantFromUrl("https://amazon.com/", newMerchants)!;
     const supportedGiftCards = await get<CardConfig[]>('supportedGiftCards');
     let cardConfig: CardConfig | undefined = undefined;
     for (cardConfig of supportedGiftCards) {
-        if (cardConfig.name == "Amazon.com") {
+        if (cardConfig.name.includes("Amazon")) {
             break;
         }
     }
+
+    const redeemUrl = cardConfig!.redeemUrl!;
+    const merchantUrl = redeemUrl.substr(0, redeemUrl.indexOf('/', redeemUrl.indexOf("amazon"))+1);
+    const merchant = await getBitPayMerchantFromUrl(merchantUrl, newMerchants)!;
 
     let clientId = await get<string>('clientId');
     while (clientId == undefined) {
@@ -40,5 +43,5 @@ setTimeout(async () => {
         />,
       document.getElementById('app-root')
     );
-}, 0);
+}, 250);
 

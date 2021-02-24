@@ -22,6 +22,6 @@ jarName="$(basename $jarPath)"
 
 echo "#!/bin/bash" > out/run.sh
 echo "cd \$(dirname \$0)" >> out/run.sh
-echo "exec java -jar ./bin/$jarName \$@" >> out/run.sh
+echo "exec java -jar ./bin/$jarName conf/server.conf \$@" >> out/run.sh
 chmod 770 out/run.sh
 
